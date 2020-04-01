@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        /*<!--就是对配置清零！一般游览器都有默认边距，所以写之前都先来这么一段！-->*/
+        *{margin:0;       /* 声明所有的外边距为0！！ */
+          padding:0}      /* 声明所有的内边距为0！！ */
+
+        /*text-decoration属性是为文本设置某种效果，下划线等等，这里设置的是空。*/
+        a{text-decoration:none}
+
+        /*整个网页的背景颜色*/
+        body{
+            background-color:#fdfcf8;
+        }
+        .hide{
+            display: none;
+        }
+
+        /*顶层菜单*/
+        .head-box{background-color:#cc0088;
+                  height:60px;   /*height高度*/
+                  width:100%;    /*width设置宽度，这里百分比就是内容有多少这里宽度就有多少*/
+                  position:fixed;  /*position用来规定元素的固定类型，绝对定位相对定位没有定位等等，这里是绝对定位，也就是相对于游览器窗口进行定位*/
+                  top:0;    /*距离顶部0，如果值是0就不用加px，因为没意义，嘿嘿。*/
+                  left:0;  /*距离左边0*/
+                  right:0}  /*距离右边0*/
+
+         /*右上角登录*/
+        .Upper_right{
+                    color:#c0cddf;
+                    position:fixed;
+                    right:150px;
+                    float:left;
+                    text-align:center;
+                    top:20px;
+                    word-spacing: 20px;
+        }
+        /*左侧菜单栏*/
+        .left_side_menu{background-color:#CCCCFF;
+                        width:250px;
+                        left:0;
+                        top:60px;
+                        position:fixed;  /*绝对定位*/
+                        height:1200PX;
+                        border:1px solid #000000;
+
+
+        }
+        /*左侧菜单栏每个元素*/
+
+        .tags{background-color:#CCFFFF;
+                            display:block;  /* 块元素，自带换行*/
+                            border:1px solid #000000;
+                            line-height:34px; /*行高*/
+                            text-align:center; /*对齐方式：居中*/
+        }
+
+        .content{
+                position:absolute;  /*绝对定位*/
+                top:60px;
+                left:260px;
+                right:0;
+                overflow:auto;
+        }
+        .left_side_menu .tags.active{
+                background-color:#000000;
+        }
+
+        {##}
+        .modal{
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 500px;
+            height: 400px;
+            margin-top: -250px;
+            margin-left: -250px;
+            z-index: 100;
+            background-color: white;
+        }
+        {#删除框#}
+        .remove{
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 400px;
+            height: 200px;
+            margin-top: -100px;
+            margin-left: -200px;
+            z-index: 100;
+            background-color: #FFFFCC;
+            text-align:center
+        }
+        .shade{
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: black;
+            opacity: 0.5;
+            z-index: 99;  {#层叠顺序高#}
+        }
+        {#编辑框#}
+        .modification{
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 400px;
+            height: 200px;
+            margin-top: -50px;
+            margin-left: -200px;
+            z-index: 100;
+            background-color: #FFFFCC;
+            text-align:center;
+
+        }
+
+
+
+
+    </style>
+        {% block css %}
+        {% endblock %}
+</head>
+
+<body>
+<script src="/static/jquery-2.1.4.min.js"></script>
+{% block js %}
+{% endblock %}
+
+        <div  class="head-box">
+            <div class="Upper_right">
+                <a href="/login.html" class="login-btn"> 登录/注册 </a>
+                <a href="/logout.html">注销</a>
+            </div>
+        </div>
+
+        <div class="left_side_menu">
+            <a id="menu_class" class="tags" href="classes.html">班级管理</a>
+            <a id="menu_teacher" class="tags" href="teacher.html">老师管理</a>
+            <a id="menu_student" class="tags" href="student.html">学生管理</a>
+        </div>
+
+        <div class="content">
+            {# 定义母板 #}
+        {% block content %}
+        {% endblock %}
+        </div>
+
+
+
+
+
+</body>
+</html>

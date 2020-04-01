@@ -1,0 +1,26 @@
+{% extends "mother_set.html" %}
+
+{% block css %}
+
+{% endblock %}
+
+{#首先继承母版，用户点了添加的按钮之后就会跳转到这里，如果是get请求说明是访问这个页面，就把这个页面返回#}
+{#如果是POST请求说明是要提交数据，在对应函数里面获取到班级数据，如果不为空就添加到数据表里，#}
+{#为空就返回错误信息：{{ msg }}，如果添加成功就返回班级界面。#}
+{#js的函数是把这个页面的标签变黑~~#}
+{% block content %}
+    <h1>添加班级</h1>
+    <form action="/add_classes.html" method="POST">
+        <input type="text" name="caption" />
+        <input type="submit" value="提交"/>{{ msg }}
+    </form>
+{% endblock %}
+
+
+{% block js %}
+    <script>
+        $(function () {
+            $('#menu_class').addClass('active');
+        });
+    </script>
+{% endblock %}

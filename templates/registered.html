@@ -1,0 +1,152 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+<script type="text/javascript">
+    function CheckPost(obj){
+       var username=document.forms["form1"]["username"].value;
+       var password=document.forms["form1"]["password"].value;
+       var name=document.forms["form1"]["name"].value;
+       var emile=document.forms["form1"]["emile"].value;
+       var phone=document.forms["form1"]["phone"].value;
+       var gender=document.getElementsByName("gender");
+       var identity=document.getElementsByName("identity");
+
+
+      if (!username) {
+          alert("请填写用户名！");
+          usernameSpan.innerText = "用户名不能为空";
+          return false;}
+
+      if (!password) {
+          alert("请填写密码！");
+          passwordSpan.innerText = "密码不能为空";
+          return false;}
+
+      if (!name) {
+          alert("请填写姓名！");
+          nameSpan.innerText = "姓名不能为空";
+          return false;}
+
+      if (!emile) {
+          alert("请填写您的邮箱");
+          emileSpan.innerText = "邮箱不能为空";
+          return false;}
+
+      if (!phone) {
+          alert("请填写手机号！");
+          phoneSpan.innerText = "手机号不能为空";
+          return false;}
+
+      if (!gender) {
+          alert("请选择性别！");
+          genderSpan.innerText = "性别不能为空";
+          return false;}
+
+      if (!identity) {
+          alert("请选择身份！");
+          identitySpan.innerText = "身份不能为空";
+          return false;}
+
+
+
+
+
+
+
+      return true;
+   }
+
+
+
+
+</script>
+
+
+<style>
+        body{
+            background-color:#fdfcf8;
+            margin: 0;
+            padding:0;
+            text-align:center;  {#水平居中需要设置到body里，再对具体操作：margin:0 auto#}
+
+        }
+        label{
+            width: 80px;
+
+            display: inline-block;
+            margin: auto
+        }
+        .Big-box{
+            position: absolute;
+            top: calc(50% - 150px);
+            left: calc(50% - 175px);
+            width: 350px;
+            height: 300px;
+            background-color:#E0E0E0;   {#背景颜色#}
+            margin: 0 auto;
+
+        }
+        span {
+            color: red;
+        }
+        .min-box text{
+            text-align:center;
+        }
+
+
+
+</style>
+</head>
+<body>
+    <div class="Big-box">
+        <h1 align="center">学生管理系统注册</h1>
+        <form  action="registered.html" method="post" name="form1" onsubmit="return CheckPost()">
+        <div align="center" class="min-box">
+            用户名：
+            <input type="text" name="username"/></input>
+            <span id="usernameSpan"></span><br/>
+
+            密　码：
+            <input type="password" name="password"/></input>
+            <span id="passwordSpan"></span><br/>
+
+            姓　名：
+            <input type="text" name="name"/></input>
+            <span id="nameSpan"></span><br/>
+
+            邮　箱:
+            <input type="text" name="emile"/></input>
+            <span id="emileSpan"></span><br/>
+
+            手机号：
+            <input type="text" name="phone"/></input>
+            <span id="phoneSpan"></span><br/>
+
+            性　别：
+            <input type="radio" name="gender" value="male">男</input>
+            <input type="radio" name="gender" value="female">女</input>
+            <span id="genderSpan"></span><br>
+
+            身　份：
+            <input type="radio" name="identity" value="root">管理员</input>
+            <input type="radio" name="identity" value="teacher">老师</input>
+            <input type="radio" name="identity" value="student">学生</input>
+            <span id="identitySpan"></span><br>
+
+
+
+            <input class="login-button"  type="submit" name="submit" value="注册">
+            <a href="login.html">登录</a>
+            <span style="">{{ msg }}</span>
+
+        </div>
+        </form>
+    </div>
+
+</body>
+
+</html>

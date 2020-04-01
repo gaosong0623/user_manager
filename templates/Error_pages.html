@@ -1,0 +1,94 @@
+
+{# 这里是索引界面#}
+{# 首先继承母板,这里填母版的文件名 #}
+{% extends 'mother_set.html' %}
+{# 这里填母版的定义名 #}
+{% block css %}
+{% endblock %}
+
+{% block js %}
+<script>
+    $(function () {
+        $("#menu_student").addClass("active");
+        bindAddEvent();
+        bindCancelEvent();
+        bindSubmitModal();
+    });
+
+    {#绑定添加事件，找到id为id_add的标签，在他被点击的时候执行function函数。#}
+    {#  找到类名为modal,shade开头的类，移除他们类名中的hide，在母版当中设置了，hide的类默认不显示，#}
+    {#所以移除之后他们原本的效果就显示出来了。#}
+    function  bindAddEvent() {
+            $('#id_add').click(function () {
+                $('.modal,.shade').removeClass('hide');
+                SUBMIT_URL = "/Error_pages.html";
+        })}
+
+        {#绑定取消事件，给那个添加框,编辑框，删除框 加上hide的属性。#}
+    function  bindCancelEvent() {
+
+            $('#id_modal_cancel').click(function () {
+                $('.modal,.shade').addClass('hide');
+            });}
+
+        {# 绑定提交模态，#}
+    function bindSubmitModal() {
+            {#找到ID为modal_ajax_submit标签，为他绑定上事件#}
+            $('#modal_ajax_submit').click(function () {
+                {#找到.modal底下的input框，#}
+
+                var gender = $('.modal input[name="gender"]').val();
+                var name = $('.modal input[name="name"]').val();
+                var cls = $('.modal input[name="cls"]').val();
+                var phone = $('.modal input[name="phone"]').val();
+                var emile = $('.modal input[name="emile"]').val();
+
+
+
+                {#发送ajax请求#}
+                $.ajax({
+                    url: SUBMIT_URL,
+                    type: 'POST',
+                    data: {gender: gender,name:name,cls:cls,phone:phone,emile:emile,demand:"add"},
+                    dataType: "JSON",
+                    {#不想处理字典直接声明：dataType: "JSON",#}
+                    success: function (rep) {
+                        {#如果你想自己处理字典就用下面这句话#}
+                        //data = JSON.parse(data);
+
+                        if(!rep.status){
+                            alert(rep.error);
+                        {#如果状态是错误的，我就显示错误信息#}
+                        {#如果输入的是正确的，你可以直接刷新一下页面：location.reload()#}
+                        {#也可以直接在数据后面追加一条数据，然后挨个给他绑定事件。。个人觉得贼鸡肋，特别麻烦。。#}
+                        }else{
+                            location.reload()
+                        }
+                    }
+                })
+            })
+            }
+
+
+</script>
+{% endblock %}
+
+{% block content %}
+    <h1>{{ msg }}</h1>
+    <input id="id_add" type="button" value="添加"/>
+
+        {#添加框#}
+    <div class="modal hide">
+    <form method="post" action="/Error_pages.html" text-align="center">
+
+        请输入您的姓名：<input name="name" type="text"  placeholder="姓名"/><br>
+        请输入您的性别：<input name="gender" type="text"  placeholder="性别"/><br>
+        请输入您的班级：<input name="cls" type="text"  placeholder="班级"/><br>
+        请输入您的手机号：<input name="phone" type="text"  placeholder="手机号" /><br>
+        请输入您的邮箱：<input name="emile" type="text"  placeholder="邮箱"/><br>
+        <input id="id_modal_cancel" type="button" value="取消"/>
+        <input type="button" id="modal_ajax_submit" value="确定"/>
+    </form>
+    </div>
+
+{% endblock %}

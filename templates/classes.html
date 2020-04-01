@@ -1,0 +1,221 @@
+
+{# 这里是索引界面#}
+{# 首先继承母板,这里填母版的文件名 #}
+{% extends 'mother_set.html' %}
+{# 这里填母版的定义名 #}
+{% block css %}
+{% endblock %}
+
+
+
+{% block content %}
+    <h1>班级列表</h1>
+    <div>
+        <input id="id_add" type="button" value="添加"/>
+        <a href="/add_classes.html">批量添加</a>
+    </div>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>标题</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for item in clsss_list %}
+                <tr>
+                    <td alex="id">{{ item.id }}</td>
+                    <td alex="caption">{{ item.caption}}</td>
+                    <td>
+                        <a class="td-edit">编辑</a>|<a href="edit_classes.html?nid={{ item.id }}">跳转编辑</a>|<a class="td-delete">删除</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{#  |safe 方法，告诉游览器，我传递的数据是安全的可以渲染  #}
+    <div class="pagination">
+        {{ str_pager|safe }}
+    </div>
+
+    {#添加框#}
+    <div class="modal hide">
+    <form method="post" action="/classes.html" >
+        <input name="id" type="text" class="hide" />
+        <input name="caption" type="text" placeholder="标题" />
+        <input id="id_modal_cancel" type="button" value="取消"/>
+        <input type="button" id="modal_ajax_submit" value="确定"/>
+    </form>
+    </div>
+
+
+    <div align="center" class="shade hide"></div>
+
+    {# 删除框#}
+    <div align="center" class="remove hide">
+        <div>是否确定删除？</div>
+        <input name="id" type="text" class="hide" />
+        <input align="center" id="id_remove_cancel" type="button" value="取消"/>
+        <input align="center" id="delete_submit" type="button" value="确定"/>
+    </div>
+
+    {#编辑框#}
+    <div align="center" class="modification hide">
+    <form   align="center" method="POST" action="/classes.html">
+        <input name="id" type="text" class="hide" />
+        <input align="center" name="getting_data" type="text"  placeholder="在这里输入你想改的名称"/>
+        <input align="center" id="id_edit_cancel" type="button" value="取消"/>
+        <input align="center" id="edit_submit" type="button"  value="确定"/>
+    </form>
+    </div>
+
+{% endblock %}
+
+
+{% block js %}
+<script>
+    {#通过添加active，来实现菜单的选中效果。#}
+    $(function () {
+        $("#menu_class").addClass("active");
+
+        bindAddEvent();
+        bindCancelEvent();
+        bindTdDeleteEvent();
+        bindSubmitModal();
+        bindTdEditEvent();
+    });
+
+    SUBMIT_URL = null;
+
+    {#绑定添加事件，找到id为id_add的标签，在他被点击的时候执行function函数。#}
+    {#  找到类名为modal,shade开头的类，移除他们类名中的hide，在母版当中设置了，hide的类默认不显示，#}
+    {#所以移除之后他们原本的效果就显示出来了。#}
+    function  bindAddEvent() {
+            $('#id_add').click(function () {
+                $('.modal,.shade').removeClass('hide');
+                SUBMIT_URL = "/classes.html";
+            });
+        }
+
+        {#绑定Td编辑事件#}
+        {#当tbody底下有任意一个编辑被点击了，就弹出编辑框#}
+    function  bindTdEditEvent() {
+            $('tbody').on('click', '.td-edit', function (){
+            $('.modification').removeClass('hide');
+            {#找到所有ID为edit_submit的标签，为他绑定事件#}
+            SUBMIT_URL = "classes.html";
+            {#parent()方法找到自己的父元素 prevAll()方法找到自己前面的方法#}
+                var tds = $(this).parent().prevAll();
+                $('.modification input[name="getting_data"]').val(tds[0].innerText);
+                $('.modification input[name="id"]').val(tds[1].innerText);
+
+
+            {#为自己写的编辑框绑定提交事件~点提交按钮的时候#}
+            $('#edit_submit').click(function () {
+                {#找到.modification底下的input框，把name为啥啥啥的val值取出来赋值给相应的变量。#}
+                var nid = $('.modification input[name="id"]').val();
+                var value = $('.modification input[name="getting_data"]').val();
+
+
+            $.ajax({
+                    url: "classes.html",
+                    type: 'POST',
+                    data: {caption: value,id: nid,demand:"edit"},
+                    dataType: "JSON",
+                    {#不想处理字典直接声明：dataType: "JSON",#}
+                    success: function (rep) {
+                        if(!rep.status){
+                            alert(rep.error);
+                        {#如果状态是错误的，我就显示错误信息#}
+                        {#如果输入的是正确的，你可以直接刷新一下页面：location.reload()#}
+                        {#也可以直接在数据后面追加一条数据，然后挨个给他绑定事件。。个人觉得贼鸡肋，特别麻烦。。#}
+                        }else{
+                            location.reload()}
+                        }
+                   })
+                                                })
+                                                })}
+
+
+
+    {#绑定取消事件，给那个添加框,编辑框，删除框 加上hide的属性。#}
+    function  bindCancelEvent() {
+
+            $('#id_modal_cancel,#id_remove_cancel,#id_edit_cancel').click(function () {
+                $('.modal,.shade,.remove,.modification').addClass('hide');
+            });}
+
+    {# 绑定Td删除事件#}
+    function  bindTdDeleteEvent() {
+            {#为所有的删除A标签绑定事件#}
+            $('tbody').on('click', '.td-delete', function () {
+                $('.remove').removeClass('hide');
+                SUBMIT_URL = "classes.html";
+                {#parent()方法找到自己的父元素 prevAll()方法找到自己前面的方法#}
+                {# 找到当前点击的那个标签，通过俩方法拿到ID#}
+                var tds = $(this).parent().prevAll();
+                {#给那个空的ID的val值设为从上面拿到的ID#}
+                $('.remove input[name="id"]').val(tds[1].innerText);
+
+            {#为自己写的删除框绑定提交事件~点提交按钮的时候#}
+            $('#delete_submit').click(function () {
+                {#找到.remove底下的input框，把name为啥啥啥的val值取出来赋值给相应的变量。#}
+                var nid = $('.remove input[name="id"]').val();
+
+
+            $.ajax({
+                    url: "classes.html",
+                    type: 'POST',
+                    data: {id: nid,demand:"Delete"},
+                    dataType: "JSON",
+                    {#不想处理字典直接声明：dataType: "JSON",#}
+                    success: function (rep) {
+                        if(!rep.status){
+                            alert(rep.error);
+                        {#如果状态是错误的，我就显示错误信息#}
+                        {#如果输入的是正确的，你可以直接刷新一下页面：location.reload()#}
+                        }else{
+                            location.reload()}
+                        }
+                   })
+                                                })
+                                                })}
+
+    {# 绑定提交模态，#}
+    function bindSubmitModal() {
+            {#找到ID为modal_ajax_submit标签，为他绑定上事件#}
+            $('#modal_ajax_submit').click(function () {
+                {#找到.modal底下的input框，#}
+                var nid = $('.modal input[name="id"]').val();
+                var value = $('.modal input[name="caption"]').val();
+                {#发送ajax请求#}
+                $.ajax({
+                    url: SUBMIT_URL,
+                    type: 'POST',
+                    data: {caption: value,id: nid,demand:"add"},
+                    dataType: "JSON",
+                    {#不想处理字典直接声明：dataType: "JSON",#}
+                    success: function (rep) {
+                        {#如果你想自己处理字典就用下面这句话#}
+                        //data = JSON.parse(data);
+
+                        if(!rep.status){
+                            alert(rep.error);
+                        {#如果状态是错误的，我就显示错误信息#}
+                        {#如果输入的是正确的，你可以直接刷新一下页面：location.reload()#}
+                        {#也可以直接在数据后面追加一条数据，然后挨个给他绑定事件。。个人觉得贼鸡肋，特别麻烦。。#}
+                        }else{
+                            location.reload()
+                        }
+                    }
+                })
+            })
+            }
+
+
+</script>
+{% endblock %}
